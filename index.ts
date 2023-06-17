@@ -4,6 +4,7 @@ import cors from 'cors'
 const port = process.env.PORT || 5555
 import productRoutes from './api/product/product.routes'
 import authRoutes from './api/auth/auth.routes'
+import storeRoutes from './api/store/store.routes'
 
 dotenv.config()
 const app = express()
@@ -15,6 +16,7 @@ const corsOptions = {
 app.use(cors(corsOptions))
 app.use('/api/product', productRoutes)
 app.use('/api/auth', authRoutes)
+app.use('/api/store', storeRoutes)
 
 app.get("/", (req: Request, res: Response) => {
     res.send("hi there bud")
