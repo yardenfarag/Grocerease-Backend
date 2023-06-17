@@ -2,6 +2,8 @@ import express, { Express, Request, Response } from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
 const port = process.env.PORT || 5555
+import productRoutes from './api/product/product.routes'
+import authRoutes from './api/auth/auth.routes'
 
 dotenv.config()
 const app = express()
@@ -11,6 +13,8 @@ const corsOptions = {
     credentials: true
 }
 app.use(cors(corsOptions))
+app.use('/api/product', productRoutes)
+app.use('/api/auth', authRoutes)
 
 app.get("/", (req: Request, res: Response) => {
     res.send("hi there bud")

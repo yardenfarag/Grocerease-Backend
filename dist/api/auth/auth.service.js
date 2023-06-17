@@ -16,37 +16,34 @@ const cryptr_1 = __importDefault(require("cryptr"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_service_1 = __importDefault(require("../user/user.service"));
 const mongodb_1 = require("mongodb");
-// import logger from '../../services/logger.service';
-const cryptr = new cryptr_1.default(process.env.SECRET1 || 'Secret-Puk-1234');
-function login(username, password) {
+const cryptr = new cryptr_1.default(process.env.HASH_SECRET || 'Secretive');
+function login(email, password) {
     return __awaiter(this, void 0, void 0, function* () {
-        // logger.debug(`auth.service - login with username: ${username}`);
-        const user = yield user_service_1.default.getByUsername(username);
+        const user = yield user_service_1.default.getByEmail(email);
         if (!user)
-            return Promise.reject('Invalid username or password');
+            return Promise.reject('Invalid email or password');
         const match = yield bcrypt_1.default.compare(password, user.password);
         if (!match)
-            return Promise.reject('Invalid username or password');
+            return Promise.reject('Invalid email or password');
         delete user.password;
         user._id = new mongodb_1.ObjectId(user._id);
         return user;
     });
 }
-function signup({ username, password, fullname, imgUrl }) {
+function signup({ email, password, fullName }) {
     return __awaiter(this, void 0, void 0, function* () {
         const saltRounds = 10;
-        // logger.debug(`auth.service - signup with username: ${username}, fullname: ${fullname}`);
-        if (!username || !password || !fullname)
+        if (!email || !password || !fullName)
             return Promise.reject('Missing required signup information');
-        const userExist = yield user_service_1.default.getByUsername(username);
+        const userExist = yield user_service_1.default.getByEmail(email);
         if (userExist)
-            return Promise.reject('Username already taken');
+            return Promise.reject('Email already taken');
         const hash = yield bcrypt_1.default.hash(password, saltRounds);
-        return user_service_1.default.add({ username, password: hash, fullname, imgUrl });
+        return user_service_1.default.add({ email, password: hash, fullName });
     });
 }
 function getLoginToken(user) {
-    const userInfo = { _id: user._id, fullname: user.fullname, isAdmin: user.isAdmin };
+    const userInfo = { _id: user._id, fullName: user.fullName, isAdmin: user.isAdmin };
     return cryptr.encrypt(JSON.stringify(userInfo));
 }
 function validateToken(loginToken) {

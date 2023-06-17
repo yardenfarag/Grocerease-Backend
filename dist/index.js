@@ -7,6 +7,8 @@ const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 const port = process.env.PORT || 5555;
+const product_routes_1 = __importDefault(require("./api/product/product.routes"));
+const auth_routes_1 = __importDefault(require("./api/auth/auth.routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const corsOptions = {
@@ -14,6 +16,8 @@ const corsOptions = {
     credentials: true
 };
 app.use((0, cors_1.default)(corsOptions));
+app.use('/api/product', product_routes_1.default);
+app.use('/api/auth', auth_routes_1.default);
 app.get("/", (req, res) => {
     res.send("hi there bud");
 });

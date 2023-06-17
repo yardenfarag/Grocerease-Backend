@@ -17,16 +17,14 @@ const auth_service_1 = __importDefault(require("./auth.service"));
 // import logger from '../../services/logger.service';
 function login(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { username, password } = req.body;
+        const { email, password } = req.body;
         try {
-            const user = yield auth_service_1.default.login(username, password);
+            const user = yield auth_service_1.default.login(email, password);
             const loginToken = auth_service_1.default.getLoginToken(user);
-            // logger.info('User login: ', user);
             res.cookie('loginToken', loginToken, { sameSite: 'none', secure: true });
             res.json(user);
         }
         catch (err) {
-            // logger.error('Failed to Login ' + err);
             res.status(401).send({ err: 'Failed to Login' });
         }
     });
@@ -36,18 +34,13 @@ function signup(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const credentials = req.body;
-            // Never log passwords
-            // logger.debug(credentials);
             const account = yield auth_service_1.default.signup(credentials);
-            // logger.debug(`auth.route - new account created: ` + JSON.stringify(account));
             const user = yield auth_service_1.default.login(credentials.username, credentials.password);
-            // logger.info('User signup:', user);
             const loginToken = auth_service_1.default.getLoginToken(user);
             res.cookie('loginToken', loginToken, { sameSite: 'none', secure: true });
             res.json(user);
         }
         catch (err) {
-            // logger.error('Failed to signup ' + err);
             res.status(500).send({ err: 'Failed to signup' });
         }
     });

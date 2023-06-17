@@ -16,7 +16,7 @@ exports.getCollection = void 0;
 const mongodb_1 = require("mongodb");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const dbURL = process.env.DB_URL || 'mongodb://127.0.0.1:27017';
+const dbURL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017';
 const dbName = process.env.DB_NAME;
 let dbConn = null;
 function getCollection(collectionName) {

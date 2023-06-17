@@ -3,38 +3,30 @@ import bcrypt from 'bcrypt';
 import userService from '../user/user.service';
 import { ObjectId } from 'mongodb';
 import { User } from '../../models/user';
-// import logger from '../../services/logger.service';
 
-const cryptr = new Cryptr(process.env.SECRET1 || 'Secret-Puk-1234');
+const cryptr = new Cryptr(process.env.HASH_SECRET || 'Secretive');
 
-async function login(username: string, password: string): Promise<any> {
-    // logger.debug(`auth.service - login with username: ${username}`);
-
-    const user = await userService.getByUsername(username);
-    if (!user) return Promise.reject('Invalid username or password');
+async function login(email: string, password: string): Promise<any> {
+    const user = await userService.getByEmail(email)
+    if (!user) return Promise.reject('Invalid email or password')
     const match = await bcrypt.compare(password, user.password)
-    if (!match) return Promise.reject('Invalid username or password')
-
-    delete user.password;
+    if (!match) return Promise.reject('Invalid email or password')
+    delete user.password
     user._id = new ObjectId(user._id as unknown as string)
-    return user;
+    return user
 }
 
-async function signup({ username, password, fullname, imgUrl }: { username: string, password: string, fullname: string, imgUrl: string }): Promise<any> {
-    const saltRounds = 10;
-
-    // logger.debug(`auth.service - signup with username: ${username}, fullname: ${fullname}`);
-    if (!username || !password || !fullname) return Promise.reject('Missing required signup information');
-
-    const userExist = await userService.getByUsername(username);
-    if (userExist) return Promise.reject('Username already taken');
-
-    const hash = await bcrypt.hash(password, saltRounds);
-    return userService.add({ username, password: hash, fullname, imgUrl });
+async function signup({ email, password, fullName}: { email: string, password: string, fullName: string }): Promise<any> {
+    const saltRounds = 10
+    if (!email || !password || !fullName) return Promise.reject('Missing required signup information')
+    const userExist = await userService.getByEmail(email)
+    if (userExist) return Promise.reject('Email already taken')
+    const hash = await bcrypt.hash(password, saltRounds)
+    return userService.add({ email, password: hash, fullName })
 }
 
-function getLoginToken(user: { _id: string, fullname: string, isAdmin: boolean }): string {
-    const userInfo = { _id: user._id, fullname: user.fullname, isAdmin: user.isAdmin };
+function getLoginToken(user: { _id: string, fullName: string, isAdmin: boolean }): string {
+    const userInfo = { _id: user._id, fullName: user.fullName, isAdmin: user.isAdmin };
     return cryptr.encrypt(JSON.stringify(userInfo));
 }
 
