@@ -8,21 +8,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProducts = void 0;
-const products_service_1 = require("./products.service");
-function getProducts(req, res) {
+const auth_service_1 = __importDefault(require("../api/auth/auth.service"));
+const als_service_1 = __importDefault(require("../services/als.service"));
+function setupAsyncLocalStorage(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const filterBy = {
-                txt: req.query.txt || '',
-            };
-            const products = yield (0, products_service_1.query)(filterBy);
-            res.json(products);
-        }
-        catch (err) {
-            res.status(500).send({ err: 'Failed to get products' });
-        }
+        const storage = {};
+        als_service_1.default.run(storage, () => {
+            if (!req.cookies)
+                return next();
+            const loggedinUser = auth_service_1.default.validateToken(req.cookies.loginToken);
+            if (loggedinUser) {
+                const alsStore = als_service_1.default.getStore();
+                alsStore.loggedinUser = loggedinUser;
+            }
+            next();
+        });
     });
 }
-exports.getProducts = getProducts;
+exports.default = setupAsyncLocalStorage;

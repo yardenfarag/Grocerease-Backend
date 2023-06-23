@@ -40,8 +40,8 @@ async function add(user: User) {
             fullName: user.fullName,
         }
         const collection = await getCollection('user')
-        await collection.insertOne(userToAdd)
-        return userToAdd
+        const newUser = await collection.insertOne(userToAdd)
+        return {_id: newUser.insertedId.toHexString(), fullName: userToAdd.fullName}
     } catch (err) {
         throw err
     }

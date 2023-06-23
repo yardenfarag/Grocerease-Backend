@@ -27,23 +27,27 @@ function login(email, password) {
             return Promise.reject('Invalid email or password');
         delete user.password;
         user._id = new mongodb_1.ObjectId(user._id);
-        return user;
+        return { _id: user._id.toHexString(), fullName: user.fullName };
     });
 }
-function signup({ email, password, fullName }) {
+function signup(credentials) {
     return __awaiter(this, void 0, void 0, function* () {
         const saltRounds = 10;
+        const { email, password, fullName } = credentials;
         if (!email || !password || !fullName)
             return Promise.reject('Missing required signup information');
         const userExist = yield user_service_1.default.getByEmail(email);
+        console.log('user exists: ', userExist);
         if (userExist)
             return Promise.reject('Email already taken');
         const hash = yield bcrypt_1.default.hash(password, saltRounds);
-        return user_service_1.default.add({ email, password: hash, fullName });
+        const user = yield user_service_1.default.add({ email, password: hash, fullName });
+        console.log('user added:', user);
+        return { _id: user._id, fullName: user.fullName };
     });
 }
 function getLoginToken(user) {
-    const userInfo = { _id: user._id, fullName: user.fullName, isAdmin: user.isAdmin };
+    const userInfo = { _id: user._id, fullName: user.fullName };
     return cryptr.encrypt(JSON.stringify(userInfo));
 }
 function validateToken(loginToken) {

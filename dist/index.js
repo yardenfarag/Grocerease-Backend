@@ -6,9 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const body_parser_1 = __importDefault(require("body-parser"));
 const port = process.env.PORT || 5555;
+const setupAls_middleware_1 = __importDefault(require("./middlewares/setupAls.middleware"));
 const product_routes_1 = __importDefault(require("./api/product/product.routes"));
 const auth_routes_1 = __importDefault(require("./api/auth/auth.routes"));
+const store_routes_1 = __importDefault(require("./api/store/store.routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const corsOptions = {
@@ -16,14 +20,19 @@ const corsOptions = {
     credentials: true
 };
 app.use((0, cors_1.default)(corsOptions));
+app.use((0, cookie_parser_1.default)());
+app.use(body_parser_1.default.json());
+app.all('*', setupAls_middleware_1.default);
 app.use('/api/product', product_routes_1.default);
 app.use('/api/auth', auth_routes_1.default);
-app.get("/", (req, res) => {
-    res.send("hi there bud");
-});
-app.get("/hi", (req, res) => {
-    res.send("bye");
+app.use('/api/store', store_routes_1.default);
+// app.get('/**', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'public', 'index.html'))
+// })
+app.get('/**', (req, res) => {
+    // res.send(req)
+    res.send('Hello, world!');
 });
 app.listen(port, () => {
-    console.log(`now listening on port ${port}`);
+    console.log(`Server is live!! Now listening on port ${port}`);
 });

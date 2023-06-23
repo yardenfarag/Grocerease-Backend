@@ -1,7 +1,10 @@
-import express, { Express, Request, Response } from 'express'
+import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
+import bodyParser from 'body-parser'
 const port = process.env.PORT || 5555
+import setupAsyncLocalStorage from './middlewares/setupAls.middleware'
 import productRoutes from './api/product/product.routes'
 import authRoutes from './api/auth/auth.routes'
 import storeRoutes from './api/store/store.routes'
@@ -14,18 +17,25 @@ const corsOptions = {
     credentials: true
 }
 app.use(cors(corsOptions))
+app.use(cookieParser())
+app.use(bodyParser.json())
+
+app.all('*', setupAsyncLocalStorage)
+
 app.use('/api/product', productRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/store', storeRoutes)
 
-app.get("/", (req: Request, res: Response) => {
-    res.send("hi there bud")
+// app.get('/**', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'public', 'index.html'))
+// })
+
+app.get('/**', (req, res) => {
+    // res.send(req)
+    res.send('Hello, world!')
 })
 
-app.get("/hi", (req: Request, res: Response) => {
-    res.send("bye")
-})
 
 app.listen(port, () => {
-    console.log(`now listening on port ${port}`)
+    console.log(`Server is live!! Now listening on port ${port}`)
 })
