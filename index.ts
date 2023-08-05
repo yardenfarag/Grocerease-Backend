@@ -2,12 +2,13 @@ import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-import bodyParser from 'body-parser'
+// import bodyParser from 'body-parser'
 const port = process.env.PORT || 5555
 import setupAsyncLocalStorage from './middlewares/setupAls.middleware'
 import productRoutes from './api/product/product.routes'
 import authRoutes from './api/auth/auth.routes'
 import storeRoutes from './api/store/store.routes'
+import priceRoutes from './api/price/price.routes'
 
 dotenv.config()
 const app = express()
@@ -18,13 +19,14 @@ const corsOptions = {
 }
 app.use(cors(corsOptions))
 app.use(cookieParser())
-app.use(bodyParser.json())
+app.use(express.json())
 
 app.all('*', setupAsyncLocalStorage)
 
 app.use('/api/product', productRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/store', storeRoutes)
+app.use('/api/price', priceRoutes)
 
 // app.get('/**', (req, res) => {
 //     res.sendFile(path.join(__dirname, 'public', 'index.html'))

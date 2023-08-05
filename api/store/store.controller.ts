@@ -1,13 +1,13 @@
 import { Request, Response } from 'express'
 import { query, getById, add, update, remove } from './store.service'
 import asyncLocalStorage from '../../services/als.service'
-import { Store } from '../../models/store copy'
+import { Store } from '../../models/store'
 
 export async function getStores(req: Request, res: Response) {
     try {
-        const storage = asyncLocalStorage.getStore() as { loggedInUser?: { _id: string } }
-        const { loggedInUser } = storage
-        const userId = loggedInUser?._id ?? ''
+        const storage = asyncLocalStorage.getStore() as { loggedinUser?: { _id: string, fullName: string } }
+        const { loggedinUser } = storage
+        const userId = loggedinUser?._id ?? ''
         const stores = await query(userId)
         res.json(stores)
     } catch (err) {
@@ -28,9 +28,9 @@ export async function getStoreById(req: Request, res: Response) {
 
 export async function addStore(req: Request, res: Response) {
     try {
-        const storage = asyncLocalStorage.getStore() as { loggedInUser?: { _id: string } }
-        const { loggedInUser } = storage
-        const userId = loggedInUser?._id ?? ''
+        const storage = asyncLocalStorage.getStore() as { loggedinUser?: { _id: string, fullName: string } }
+        const { loggedinUser } = storage
+        const userId = loggedinUser?._id ?? ''
         const store:Store = req.body
         store.userIds.push(userId)
         const storeToAdd = await add(store)

@@ -1,16 +1,20 @@
 import { Document, ObjectId, OptionalId, WithId } from 'mongodb';
 import { getCollection } from '../../services/db.service';
-import { Store } from '../../models/store copy';
+import { Store } from '../../models/store';
 
 export async function query(userId: string) {
     try {
+        console.log(userId);
+        // userId = '6495cd3460204c0304df8c29'
         const collection = await getCollection('store')
-        const products = await collection.find({ userIds: { $in: [userId] } }).toArray()
-        const mappedStores: Store[] = products.map((doc: WithId<Document>) => {
-            const { _id, title, color, places, shoppingList, userIds } = doc
-            return { _id: _id.toHexString(), title, color, places, shoppingList, userIds }
+        // const stores = await collection.find({ userIds: { $in: [userId] } }).toArray()
+        const stores = await collection.find().toArray()
+        const mappedStores: Store[] = stores.map((doc: WithId<Document>) => {
+            const { _id, title, color, shoppingList, userIds, items } = doc
+            return { _id: _id.toHexString(), title, color, shoppingList, userIds, items }
         })
-        return mappedStores
+        const filteredStores = mappedStores.filter((s:Store) => s.userIds.includes(userId))
+        return filteredStores
     } catch (err) {
         throw err
     }
@@ -21,8 +25,8 @@ export async function getById(storeId: string) {
         const collection = await getCollection('store')
         const store = await collection.findOne({ _id: new ObjectId(storeId) })
         if (store) {
-            const { _id, title, color, places, shoppingList, userIds } = store
-            return { _id: _id.toHexString(), title, color, places, shoppingList, userIds }
+            const { _id, title, color, shoppingList, userIds, items } = store
+            return { _id: _id.toHexString(), title, color, shoppingList, userIds, items }
         }
         return store
     } catch (err) {
@@ -35,9 +39,9 @@ export async function add(store: Store) {
         const storeToAdd = {
             title: store.title,
             color: store.color,
-            places: store.places,
             shoppingList: store.shoppingList,
-            userIds: store.userIds
+            userIds: store.userIds,
+            items: store.items
         }
         const collection = await getCollection('store')
         await collection.insertOne(storeToAdd)
@@ -52,9 +56,9 @@ export async function update(store: Store) {
         const storeToSave: Store = {
             title: store.title,
             color: store.color,
-            places: store.places,
             shoppingList: store.shoppingList,
-            userIds: store.userIds
+            userIds: store.userIds,
+            items: store.items
         }
         const collection = await getCollection('store')
         await collection.updateOne({ _id: new ObjectId(store._id) }, { $set: storeToSave })

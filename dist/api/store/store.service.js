@@ -15,13 +15,17 @@ const db_service_1 = require("../../services/db.service");
 function query(userId) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            console.log(userId);
+            // userId = '6495cd3460204c0304df8c29'
             const collection = yield (0, db_service_1.getCollection)('store');
-            const products = yield collection.find({ userIds: { $in: [userId] } }).toArray();
-            const mappedStores = products.map((doc) => {
-                const { _id, title, color, places, shoppingList, userIds } = doc;
-                return { _id: _id.toHexString(), title, color, places, shoppingList, userIds };
+            // const stores = await collection.find({ userIds: { $in: [userId] } }).toArray()
+            const stores = yield collection.find().toArray();
+            const mappedStores = stores.map((doc) => {
+                const { _id, title, color, shoppingList, userIds, items } = doc;
+                return { _id: _id.toHexString(), title, color, shoppingList, userIds, items };
             });
-            return mappedStores;
+            const filteredStores = mappedStores.filter((s) => s.userIds.includes(userId));
+            return filteredStores;
         }
         catch (err) {
             throw err;
@@ -35,8 +39,8 @@ function getById(storeId) {
             const collection = yield (0, db_service_1.getCollection)('store');
             const store = yield collection.findOne({ _id: new mongodb_1.ObjectId(storeId) });
             if (store) {
-                const { _id, title, color, places, shoppingList, userIds } = store;
-                return { _id: _id.toHexString(), title, color, places, shoppingList, userIds };
+                const { _id, title, color, shoppingList, userIds, items } = store;
+                return { _id: _id.toHexString(), title, color, shoppingList, userIds, items };
             }
             return store;
         }
@@ -52,9 +56,9 @@ function add(store) {
             const storeToAdd = {
                 title: store.title,
                 color: store.color,
-                places: store.places,
                 shoppingList: store.shoppingList,
-                userIds: store.userIds
+                userIds: store.userIds,
+                items: store.items
             };
             const collection = yield (0, db_service_1.getCollection)('store');
             yield collection.insertOne(storeToAdd);
@@ -72,9 +76,9 @@ function update(store) {
             const storeToSave = {
                 title: store.title,
                 color: store.color,
-                places: store.places,
                 shoppingList: store.shoppingList,
-                userIds: store.userIds
+                userIds: store.userIds,
+                items: store.items
             };
             const collection = yield (0, db_service_1.getCollection)('store');
             yield collection.updateOne({ _id: new mongodb_1.ObjectId(store._id) }, { $set: storeToSave });

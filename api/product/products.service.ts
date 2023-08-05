@@ -20,3 +20,17 @@ export async function query(filterBy: { txt: string } = { txt: '' }) {
     }
 }
 
+export async function getByBarcode(barcode: string) {
+    try {
+        const collection = await getCollection('product')
+        const product = await collection.findOne({ product_barcode: barcode })
+        if (product) {
+            const { _id, product_name, product_image, product_barcode, product_description, manufacturer_name } = product
+            return { _id: _id.toHexString(), product_name, product_image, product_barcode, product_description, manufacturer_name }
+        }
+        return product
+    } catch (err) {
+        throw err
+    }
+}
+

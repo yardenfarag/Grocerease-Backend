@@ -17,9 +17,9 @@ const auth_service_1 = __importDefault(require("./auth.service"));
 // import logger from '../../services/logger.service';
 function login(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const credentials = req.body;
+        const { email, password } = req.body;
         try {
-            const user = yield auth_service_1.default.login(credentials.email, credentials.password);
+            const user = yield auth_service_1.default.login(email, password);
             const loginToken = auth_service_1.default.getLoginToken(user);
             res.cookie('loginToken', loginToken, { sameSite: 'none', secure: true });
             res.json(user);
@@ -30,23 +30,28 @@ function login(req, res) {
     });
 }
 exports.login = login;
-function signup(req, res) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            console.log('body:', req.body);
-            const credentials = req.body;
-            const account = yield auth_service_1.default.signup(credentials);
-            const user = yield auth_service_1.default.login(credentials.email, credentials.password);
-            const loginToken = auth_service_1.default.getLoginToken(user);
-            res.cookie('loginToken', loginToken, { sameSite: 'none', secure: true });
-            console.log(user);
-            res.json(user);
-        }
-        catch (err) {
-            res.status(500).send({ err: 'Failed to signup' });
-        }
-    });
-}
+const signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const newuser = {
+            fullName: req.body.fullName,
+            email: req.body.email,
+            password: req.body.password
+        };
+        const credentials = newuser;
+        const account = yield auth_service_1.default.signup(credentials);
+        console.log("got here");
+        console.log(req.body);
+        // res.status(200).json(account)
+        const user = yield auth_service_1.default.login(credentials.email, credentials.password);
+        const loginToken = auth_service_1.default.getLoginToken(user);
+        res.cookie('loginToken', loginToken, { sameSite: 'none', secure: true });
+        res.status(200).json(user);
+    }
+    catch (err) {
+        console.log(err);
+        next();
+    }
+});
 exports.signup = signup;
 function logout(req, res) {
     return __awaiter(this, void 0, void 0, function* () {

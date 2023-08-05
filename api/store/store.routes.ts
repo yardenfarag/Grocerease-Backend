@@ -4,7 +4,7 @@ import requireAuth from '../../middlewares/requireAuth.middleware'
 
 const router = express.Router()
 
-router.get('/:userId', requireAuth, getStores)
+router.get('/', requireAuth, getStores)
 router.get('/:id', requireAuth, getStoreById)
 router.post('/', requireAuth, addStore)
 router.put('/:id', requireAuth, updateStore)

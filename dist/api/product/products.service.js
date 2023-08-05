@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.query = void 0;
+exports.getByBarcode = exports.query = void 0;
 const db_service_1 = require("../../services/db.service");
 function query(filterBy = { txt: '' }) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -31,3 +31,20 @@ function query(filterBy = { txt: '' }) {
     });
 }
 exports.query = query;
+function getByBarcode(barcode) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const collection = yield (0, db_service_1.getCollection)('product');
+            const product = yield collection.findOne({ product_barcode: barcode });
+            if (product) {
+                const { _id, product_name, product_image, product_barcode, product_description, manufacturer_name } = product;
+                return { _id: _id.toHexString(), product_name, product_image, product_barcode, product_description, manufacturer_name };
+            }
+            return product;
+        }
+        catch (err) {
+            throw err;
+        }
+    });
+}
+exports.getByBarcode = getByBarcode;

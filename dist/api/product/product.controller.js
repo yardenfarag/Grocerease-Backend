@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProducts = void 0;
+exports.getProductByBarcode = exports.getProducts = void 0;
 const products_service_1 = require("./products.service");
 function getProducts(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -26,3 +26,16 @@ function getProducts(req, res) {
     });
 }
 exports.getProducts = getProducts;
+function getProductByBarcode(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const barcode = req.params.barcode;
+            const product = yield (0, products_service_1.getByBarcode)(barcode);
+            res.json(product);
+        }
+        catch (err) {
+            res.status(500).send({ err: 'Failed to get product' });
+        }
+    });
+}
+exports.getProductByBarcode = getProductByBarcode;

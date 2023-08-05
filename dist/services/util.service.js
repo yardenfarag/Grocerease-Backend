@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.formatDate = void 0;
 function makeId(length = 5) {
     let txt = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -93,6 +94,13 @@ function timeAgo(ms = new Date()) {
     }
     return 'just now';
 }
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}${month}${day}`;
+}
+exports.formatDate = formatDate;
 exports.default = {
     makeId,
     getRandomInt,
@@ -100,4 +108,5 @@ exports.default = {
     generateRandomName,
     timeAgo,
     generateRandomImg,
+    formatDate
 };

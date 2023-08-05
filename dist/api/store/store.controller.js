@@ -20,8 +20,8 @@ function getStores(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const storage = als_service_1.default.getStore();
-            const { loggedInUser } = storage;
-            const userId = (_a = loggedInUser === null || loggedInUser === void 0 ? void 0 : loggedInUser._id) !== null && _a !== void 0 ? _a : '';
+            const { loggedinUser } = storage;
+            const userId = (_a = loggedinUser === null || loggedinUser === void 0 ? void 0 : loggedinUser._id) !== null && _a !== void 0 ? _a : '';
             const stores = yield (0, store_service_1.query)(userId);
             res.json(stores);
         }
@@ -49,8 +49,8 @@ function addStore(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const storage = als_service_1.default.getStore();
-            const { loggedInUser } = storage;
-            const userId = (_a = loggedInUser === null || loggedInUser === void 0 ? void 0 : loggedInUser._id) !== null && _a !== void 0 ? _a : '';
+            const { loggedinUser } = storage;
+            const userId = (_a = loggedinUser === null || loggedinUser === void 0 ? void 0 : loggedinUser._id) !== null && _a !== void 0 ? _a : '';
             const store = req.body;
             store.userIds.push(userId);
             const storeToAdd = yield (0, store_service_1.add)(store);
