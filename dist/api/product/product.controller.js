@@ -9,15 +9,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProductByBarcode = exports.getProducts = void 0;
+exports.addProduct = exports.getProductByBarcode = exports.getProducts = void 0;
 const products_service_1 = require("./products.service");
 function getProducts(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const filterBy = {
-                txt: req.query.txt || '',
-            };
-            const products = yield (0, products_service_1.query)(filterBy);
+            const filterBy = { txt: '' };
+            if (typeof req.query.filterBy === 'string') {
+                filterBy.txt = req.query.filterBy;
+            }
+            else if (typeof req.query.filterBy === 'object' && req.query.filterBy !== null) {
+                filterBy.txt = req.query.filterBy.txt || '';
+            }
+            let page = 1;
+            if (req.query.page !== undefined) {
+                page = +req.query.page;
+            }
+            const products = yield (0, products_service_1.query)(filterBy, page);
             res.json(products);
         }
         catch (err) {
@@ -39,3 +47,17 @@ function getProductByBarcode(req, res) {
     });
 }
 exports.getProductByBarcode = getProductByBarcode;
+function addProduct(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const barcode = req.body.barcode;
+            const imgUrl = req.body.imgUrl;
+            const product = (0, products_service_1.add)(barcode, imgUrl);
+            res.json(product);
+        }
+        catch (err) {
+            res.status(500).send({ err: 'Failed to get product' });
+        }
+    });
+}
+exports.addProduct = addProduct;

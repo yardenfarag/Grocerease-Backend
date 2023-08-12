@@ -2,7 +2,6 @@ import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-// import bodyParser from 'body-parser'
 const port = process.env.PORT || 5555
 import setupAsyncLocalStorage from './middlewares/setupAls.middleware'
 import productRoutes from './api/product/product.routes'
@@ -14,7 +13,7 @@ dotenv.config()
 const app = express()
 
 const corsOptions = {
-    origin: ['http://127.0.0.1:5173', 'http://localhost:5173', 'http://127.0.0.1:5555', 'http://localhost:5555'],
+    origin: ['http://127.0.0.1:5173', 'http://localhost:5173', 'http://127.0.0.1:5555', 'http://localhost:5555', 'http://127.0.0.1:5174', 'http://localhost:5174',],
     credentials: true
 }
 app.use(cors(corsOptions))
@@ -28,12 +27,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/store', storeRoutes)
 app.use('/api/price', priceRoutes)
 
-// app.get('/**', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'public', 'index.html'))
-// })
-
 app.get('/**', (req, res) => {
-    // res.send(req)
     res.send('Hello, world!')
 })
 

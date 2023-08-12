@@ -10,15 +10,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMarketData = void 0;
-const price_service_1 = require("./price.service");
+const mShuk_1 = require("./markets/mShuk");
+const mShukSub_1 = require("./markets/mShukSub");
+const victory_1 = require("./markets/victory");
 function getMarketData(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const pos = req.query.pos || { lat: 0, lng: 0 };
             const rad = parseInt(req.query.rad) || 10;
             const items = req.query.items;
-            const data = yield (0, price_service_1.filterMarketsByRadius)(pos, rad, items);
-            res.json(data);
+            let marketData = [];
+            const mShukMarkets = yield (0, mShuk_1.getMShukMarkets)(pos, rad, items);
+            marketData = marketData.concat(mShukMarkets);
+            marketData = marketData.concat(yield (0, mShukSub_1.getMShukSubMarkets)(pos, rad, items));
+            marketData = marketData.concat(yield (0, victory_1.getVictoryMarkets)(pos, rad, items));
+            res.json(marketData);
         }
         catch (err) {
             res.status(500).send({ err: 'Failed to get market data' });
