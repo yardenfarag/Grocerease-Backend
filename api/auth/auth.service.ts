@@ -21,12 +21,10 @@ async function signup(credentials: { email: string, password: string, fullName: 
     const { email, password, fullName } = credentials
     if (!email || !password || !fullName) return Promise.reject('Missing required signup information')
     const userExist = await userService.getByEmail(email)
-    console.log('user exists: ', userExist);
     
     if (userExist) return Promise.reject('Email already taken')
     const hash = await bcrypt.hash(password, saltRounds)
     const user = await userService.add({ email, password: hash, fullName })
-    console.log('user added:', user);
     return { _id: user._id, fullName: user.fullName }
 }
 

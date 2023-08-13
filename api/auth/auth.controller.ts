@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import authService from './auth.service'
-// import logger from '../../services/logger.service';
 
 async function login(req: Request, res: Response): Promise<void> {
     const { email, password } = req.body
@@ -25,9 +24,6 @@ const signup = async (req: Request, res: Response, next: any): Promise<void> => 
         }
         const credentials = newuser
         const account = await authService.signup(credentials)
-        console.log("got here")
-        console.log(req.body)
-        // res.status(200).json(account)
         const user = await authService.login(credentials.email, credentials.password)
         const loginToken = authService.getLoginToken(user)
         res.cookie('loginToken', loginToken, { sameSite: 'none', secure: true })

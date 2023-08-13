@@ -1,13 +1,10 @@
-import { Document, ObjectId, OptionalId, WithId } from 'mongodb';
+import { Document, ObjectId, WithId } from 'mongodb';
 import { getCollection } from '../../services/db.service';
 import { Store } from '../../models/store';
 
 export async function query(userId: string) {
     try {
-        console.log(userId);
-        // userId = '6495cd3460204c0304df8c29'
         const collection = await getCollection('store')
-        // const stores = await collection.find({ userIds: { $in: [userId] } }).toArray()
         const stores = await collection.find().toArray()
         const mappedStores: Store[] = stores.map((doc: WithId<Document>) => {
             const { _id, title, color, shoppingList, userIds, items } = doc

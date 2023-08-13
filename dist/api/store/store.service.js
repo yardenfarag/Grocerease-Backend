@@ -15,10 +15,7 @@ const db_service_1 = require("../../services/db.service");
 function query(userId) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            console.log(userId);
-            // userId = '6495cd3460204c0304df8c29'
             const collection = yield (0, db_service_1.getCollection)('store');
-            // const stores = await collection.find({ userIds: { $in: [userId] } }).toArray()
             const stores = yield collection.find().toArray();
             const mappedStores = stores.map((doc) => {
                 const { _id, title, color, shoppingList, userIds, items } = doc;

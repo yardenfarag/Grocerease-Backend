@@ -37,12 +37,10 @@ function signup(credentials) {
         if (!email || !password || !fullName)
             return Promise.reject('Missing required signup information');
         const userExist = yield user_service_1.default.getByEmail(email);
-        console.log('user exists: ', userExist);
         if (userExist)
             return Promise.reject('Email already taken');
         const hash = yield bcrypt_1.default.hash(password, saltRounds);
         const user = yield user_service_1.default.add({ email, password: hash, fullName });
-        console.log('user added:', user);
         return { _id: user._id, fullName: user.fullName };
     });
 }

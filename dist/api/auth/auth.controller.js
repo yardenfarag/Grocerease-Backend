@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getLoggedInUser = exports.logout = exports.signup = exports.login = void 0;
 const auth_service_1 = __importDefault(require("./auth.service"));
-// import logger from '../../services/logger.service';
 function login(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { email, password } = req.body;
@@ -39,9 +38,6 @@ const signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
         };
         const credentials = newuser;
         const account = yield auth_service_1.default.signup(credentials);
-        console.log("got here");
-        console.log(req.body);
-        // res.status(200).json(account)
         const user = yield auth_service_1.default.login(credentials.email, credentials.password);
         const loginToken = auth_service_1.default.getLoginToken(user);
         res.cookie('loginToken', loginToken, { sameSite: 'none', secure: true });
