@@ -16,7 +16,7 @@ const price_routes_1 = __importDefault(require("./api/price/price.routes"));
 const receipt_routes_1 = __importDefault(require("./api/receipt/receipt.routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const allowedOrigins = ['http://localhost:5173', 'https://grocerease-zjxc.onrender.com/'];
+const allowedOrigins = ['http://localhost:5173', 'https://grocerease-zjxc.onrender.com'];
 // const corsOptions = {
 //     origin: ['https://grocerease-zjxc.onrender.com'],
 //     // origin: ['http://127.0.0.1:5173', 'http://localhost:5173', 'http://127.0.0.1:5555', 'http://localhost:5555', 'http://127.0.0.1:5174', 'http://localhost:5174',],

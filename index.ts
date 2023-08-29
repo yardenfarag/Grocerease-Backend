@@ -13,7 +13,7 @@ import receiptRoutes from './api/receipt/receipt.routes'
 dotenv.config()
 const app = express()
 
-const allowedOrigins = ['http://localhost:5173', 'https://grocerease-zjxc.onrender.com/']
+const allowedOrigins = ['http://localhost:5173', 'https://grocerease-zjxc.onrender.com']
 
 // const corsOptions = {
 //     origin: ['https://grocerease-zjxc.onrender.com'],
