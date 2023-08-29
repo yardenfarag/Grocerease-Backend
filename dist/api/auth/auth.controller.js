@@ -19,6 +19,7 @@ function login(req, res) {
         const { email, password } = req.body;
         try {
             const user = yield auth_service_1.default.login(email, password);
+            console.log('user initialized ===', user);
             const loginToken = auth_service_1.default.getLoginToken(user);
             res.cookie('loginToken', loginToken, { sameSite: 'none', secure: true });
             res.json(user);
