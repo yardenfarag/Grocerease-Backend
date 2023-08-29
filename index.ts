@@ -14,7 +14,8 @@ dotenv.config()
 const app = express()
 
 const corsOptions = {
-    origin: ['http://127.0.0.1:5173', 'http://localhost:5173', 'http://127.0.0.1:5555', 'http://localhost:5555', 'http://127.0.0.1:5174', 'http://localhost:5174',],
+    origin: ['https://grocerease-zjxc.onrender.com'],
+    // origin: ['http://127.0.0.1:5173', 'http://localhost:5173', 'http://127.0.0.1:5555', 'http://localhost:5555', 'http://127.0.0.1:5174', 'http://localhost:5174',],
     credentials: true
 }
 app.use(cors(corsOptions))
