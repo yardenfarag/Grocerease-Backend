@@ -5,7 +5,6 @@ async function login(req: Request, res: Response): Promise<void> {
     const { email, password } = req.body
     try {
         const user = await authService.login(email, password)
-        console.log('user initialized ===', user)
         const loginToken = authService.getLoginToken(user)
         res.cookie('loginToken', loginToken, { sameSite: 'none', secure: true })
         res.json(user)
