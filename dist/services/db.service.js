@@ -17,7 +17,7 @@ const mongodb_1 = require("mongodb");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const dbURL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017';
-const dbName = process.env.DB_NAME;
+const dbName = process.env.DB_NAME || 'grocerease_db';
 let dbConn = null;
 function getCollection(collectionName) {
     return __awaiter(this, void 0, void 0, function* () {

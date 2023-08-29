@@ -12,15 +12,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yardenfarag/Grocerease.backend.git"
+    "url": "git+https://github.com/yardenfarag/Grocerease-Backend.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/yardenfarag/Grocerease.backend/issues"
+    "url": "https://github.com/yardenfarag/Grocerease-Backend/issues"
   },
-  "homepage": "https://github.com/yardenfarag/Grocerease.backend#readme",
+  "homepage": "https://github.com/yardenfarag/Grocerease-Backend#readme",
   "dependencies": {
     "@google-cloud/vision": "^4.0.1",
     "@types/axios": "^0.14.0",

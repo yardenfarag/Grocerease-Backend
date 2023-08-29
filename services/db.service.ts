@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const dbURL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017'
-const dbName = process.env.DB_NAME
+const dbName = process.env.DB_NAME || 'grocerease_db'
 
 let dbConn: Db | null = null;
 
