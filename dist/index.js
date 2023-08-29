@@ -16,11 +16,25 @@ const price_routes_1 = __importDefault(require("./api/price/price.routes"));
 const receipt_routes_1 = __importDefault(require("./api/receipt/receipt.routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const corsOptions = {
-    origin: ['http://127.0.0.1:5173', 'http://localhost:5173', 'http://127.0.0.1:5555', 'http://localhost:5555', 'http://127.0.0.1:5174', 'http://localhost:5174',],
+const allowedOrigins = ['http://localhost:5173', 'https://grocerease-zjxc.onrender.com/'];
+// const corsOptions = {
+//     origin: ['https://grocerease-zjxc.onrender.com'],
+//     // origin: ['http://127.0.0.1:5173', 'http://localhost:5173', 'http://127.0.0.1:5555', 'http://localhost:5555', 'http://127.0.0.1:5174', 'http://localhost:5174',],
+//     credentials: true
+// }
+// app.use(cors(corsOptions))
+// app.use(cors())
+app.use((0, cors_1.default)({
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        }
+        else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
-};
-app.use((0, cors_1.default)(corsOptions));
+}));
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
 app.all('*', setupAls_middleware_1.default);
@@ -29,6 +43,15 @@ app.use('/api/auth', auth_routes_1.default);
 app.use('/api/store', store_routes_1.default);
 app.use('/api/price', price_routes_1.default);
 app.use('/api/receipt', receipt_routes_1.default);
+app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.header("Access-Control-Allow-Origin", origin);
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.header("Access-Control-Allow-Credentials", "true");
+    }
+    next();
+});
 app.get('/**', (req, res) => {
     res.send('Hello, world!');
 });
