@@ -109,4 +109,7 @@ function mapToBranch(doc: WithId<Document>): Branch {
     }
 }
 
+export function getKey(keyName: string) :string {
+    return process.env[keyName] || ''
+}
 

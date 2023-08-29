@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { getByBarcode, query, add } from './products.service'
+import { getByBarcode, query, add, getByBarcodeGs1 } from './products.service'
 
 export async function getProducts(req: Request, res: Response) {
     try {
@@ -27,7 +27,7 @@ export async function getProducts(req: Request, res: Response) {
 export async function getProductByBarcode(req: Request, res: Response) {
     try {
         const barcode = req.params.barcode
-        const product = await getByBarcode(barcode)
+        const product = await getByBarcodeGs1(barcode)
         res.json(product)
     } catch (err) {
         res.status(500).send({ err: 'Failed to get product' })

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.add = exports.getByBarcode = exports.query = void 0;
+exports.add = exports.getByBarcodeGs1 = exports.getByBarcode = exports.query = void 0;
 const db_service_1 = require("../../services/db.service");
 const axios_1 = __importDefault(require("axios"));
 function query(filterBy = { txt: '' }, page) {
@@ -54,6 +54,19 @@ exports.query = query;
 function getByBarcode(barcode) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const collection = yield (0, db_service_1.getCollection)('product');
+            const product = yield collection.findOne({ 'product_barcode': barcode });
+            return product;
+        }
+        catch (err) {
+            throw err;
+        }
+    });
+}
+exports.getByBarcode = getByBarcode;
+function getByBarcodeGs1(barcode) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
             const collection = yield (0, db_service_1.getCollection)('gs1');
             const product = yield collection.findOne({ 'product_info.Main_Fields.GTIN': barcode });
             return product;
@@ -63,10 +76,15 @@ function getByBarcode(barcode) {
         }
     });
 }
-exports.getByBarcode = getByBarcode;
+exports.getByBarcodeGs1 = getByBarcodeGs1;
 function add(barcode, imgUrl) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const gs1Collection = yield (0, db_service_1.getCollection)('gs1');
+            const existingProduct = yield gs1Collection.findOne({ 'product_info.Main_Fields.GTIN': barcode });
+            if (existingProduct) {
+                return existingProduct;
+            }
             const url = `http://fe.gs1-retailer.mk101.signature-it.com/external/product/${barcode}.json?hq=1`;
             const username = process.env.GS1_USERNAME;
             const password = process.env.GS1_PASSWORD;
@@ -77,7 +95,6 @@ function add(barcode, imgUrl) {
                 }
             });
             const gs1Product = Object.assign(Object.assign({}, res.data[0]), { imgUrl });
-            const gs1Collection = yield (0, db_service_1.getCollection)('gs1');
             yield gs1Collection.insertOne(gs1Product);
             const productsCollection = yield (0, db_service_1.getCollection)('product');
             const product = {

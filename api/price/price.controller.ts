@@ -5,6 +5,7 @@ import { getMShukSubMarkets } from './markets/mShukSub'
 import { getVictoryMarkets } from './markets/victory'
 import { Market } from '../../models/market'
 import { Pos } from '../../models/pos'
+import { getKey } from './price.service'
 
 export async function getMarketData(req: Request, res: Response) {
   try {
@@ -17,9 +18,20 @@ export async function getMarketData(req: Request, res: Response) {
     marketData = marketData.concat(mShukMarkets)
     marketData = marketData.concat(await getMShukSubMarkets(pos, rad, items))
     marketData = marketData.concat(await getVictoryMarkets(pos, rad, items))
-    
+
     res.json(marketData)
   } catch (err) {
     res.status(500).send({ err: 'Failed to get market data' })
+  }
+}
+
+export async function getKeyValue(req: Request, res: Response) {
+  try {
+    const keyName = req.query.keyName as string
+    const value = getKey(keyName)
+
+    res.json(value)
+  } catch (error) {
+    res.status(404).send({ err: 'Key not found' })
   }
 }

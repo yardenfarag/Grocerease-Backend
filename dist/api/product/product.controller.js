@@ -38,7 +38,7 @@ function getProductByBarcode(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const barcode = req.params.barcode;
-            const product = yield (0, products_service_1.getByBarcode)(barcode);
+            const product = yield (0, products_service_1.getByBarcodeGs1)(barcode);
             res.json(product);
         }
         catch (err) {

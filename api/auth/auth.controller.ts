@@ -45,8 +45,9 @@ async function logout(req: Request, res: Response): Promise<void> {
 }
 
 async function getLoggedInUser(req: Request, res: Response): Promise<void> {
+    const loginToken = req.query.loginToken as string
     try {
-        const user: { _id: string, fullName: string } = await authService.validateToken(req.body.loginToken)
+        const user: { _id: string, fullName: string } = await authService.validateToken(loginToken)
         res.json(user)
     } catch (err) {
         res.status(500).send({ err: 'Failed to get logged in user' })

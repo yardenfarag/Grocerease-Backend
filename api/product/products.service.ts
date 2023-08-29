@@ -46,6 +46,16 @@ export async function query(filterBy: { txt: string } = { txt: '' }, page: numbe
 
 export async function getByBarcode(barcode: string) {
     try {
+        const collection = await getCollection('product')
+        const product = await collection.findOne({ 'product_barcode': barcode })
+        return product
+    } catch (err) {
+        throw err
+    }
+}
+
+export async function getByBarcodeGs1(barcode: string) {
+    try {
         const collection = await getCollection('gs1')
         const product = await collection.findOne({ 'product_info.Main_Fields.GTIN': barcode })
         return product
@@ -56,6 +66,12 @@ export async function getByBarcode(barcode: string) {
 
 export async function add(barcode: string, imgUrl: string) {
     try {
+        const gs1Collection = await getCollection('gs1')
+        const existingProduct = await gs1Collection.findOne({ 'product_info.Main_Fields.GTIN': barcode })
+
+        if (existingProduct) {
+            return existingProduct
+        }
 
         const url = `http://fe.gs1-retailer.mk101.signature-it.com/external/product/${barcode}.json?hq=1`
 
@@ -70,7 +86,6 @@ export async function add(barcode: string, imgUrl: string) {
         })
         const gs1Product = { ...res.data[0], imgUrl }
 
-        const gs1Collection = await getCollection('gs1')
         await gs1Collection.insertOne(gs1Product)
 
         const productsCollection = await getCollection('product')

@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/yardenfarag/Grocerease.backend#readme",
   "dependencies": {
+    "@google-cloud/vision": "^4.0.1",
     "@types/axios": "^0.14.0",
     "@types/bcrypt": "^5.0.0",
     "@types/concurrently": "^7.0.0",

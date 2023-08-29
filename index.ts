@@ -8,6 +8,7 @@ import productRoutes from './api/product/product.routes'
 import authRoutes from './api/auth/auth.routes'
 import storeRoutes from './api/store/store.routes'
 import priceRoutes from './api/price/price.routes'
+import receiptRoutes from './api/receipt/receipt.routes'
 
 dotenv.config()
 const app = express()
@@ -26,6 +27,7 @@ app.use('/api/product', productRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/store', storeRoutes)
 app.use('/api/price', priceRoutes)
+app.use('/api/receipt', receiptRoutes)
 
 app.get('/**', (req, res) => {
     res.send('Hello, world!')

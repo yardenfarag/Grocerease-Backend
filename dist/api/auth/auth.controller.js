@@ -63,8 +63,9 @@ function logout(req, res) {
 exports.logout = logout;
 function getLoggedInUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
+        const loginToken = req.query.loginToken;
         try {
-            const user = yield auth_service_1.default.validateToken(req.body.loginToken);
+            const user = yield auth_service_1.default.validateToken(loginToken);
             res.json(user);
         }
         catch (err) {

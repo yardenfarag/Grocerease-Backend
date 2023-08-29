@@ -4,8 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const price_controller_1 = require("./price.controller");
+const receipt_controller_1 = require("./receipt.controller");
 const router = express_1.default.Router();
-router.get('/', price_controller_1.getMarketData);
-router.get('/key', price_controller_1.getKeyValue);
+router.get('/', receipt_controller_1.scanReceipt);
 exports.default = router;

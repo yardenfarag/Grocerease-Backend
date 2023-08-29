@@ -13,6 +13,7 @@ const product_routes_1 = __importDefault(require("./api/product/product.routes")
 const auth_routes_1 = __importDefault(require("./api/auth/auth.routes"));
 const store_routes_1 = __importDefault(require("./api/store/store.routes"));
 const price_routes_1 = __importDefault(require("./api/price/price.routes"));
+const receipt_routes_1 = __importDefault(require("./api/receipt/receipt.routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const corsOptions = {
@@ -27,6 +28,7 @@ app.use('/api/product', product_routes_1.default);
 app.use('/api/auth', auth_routes_1.default);
 app.use('/api/store', store_routes_1.default);
 app.use('/api/price', price_routes_1.default);
+app.use('/api/receipt', receipt_routes_1.default);
 app.get('/**', (req, res) => {
     res.send('Hello, world!');
 });

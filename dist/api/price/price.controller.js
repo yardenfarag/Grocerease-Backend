@@ -9,10 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMarketData = void 0;
+exports.getKeyValue = exports.getMarketData = void 0;
 const mShuk_1 = require("./markets/mShuk");
 const mShukSub_1 = require("./markets/mShukSub");
 const victory_1 = require("./markets/victory");
+const price_service_1 = require("./price.service");
 function getMarketData(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -32,3 +33,16 @@ function getMarketData(req, res) {
     });
 }
 exports.getMarketData = getMarketData;
+function getKeyValue(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const keyName = req.query.keyName;
+            const value = (0, price_service_1.getKey)(keyName);
+            res.json(value);
+        }
+        catch (error) {
+            res.status(404).send({ err: 'Key not found' });
+        }
+    });
+}
+exports.getKeyValue = getKeyValue;
